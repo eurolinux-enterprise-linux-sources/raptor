@@ -1,12 +1,13 @@
 Summary:       Raptor RDF Parser Toolkit for Redland
 Name:          raptor
 Version:       1.4.18
-Release:       5%{?dist}
+Release:       5%{?dist}.1
 License:       LGPLv2+ or ASL 2.0
 Group:         System Environment/Libraries
 Source:        http://download.librdf.org/source/raptor-%{version}.tar.gz
 # Make the raptor-config file multilib friendly (RHBZ#477342)
 Patch0:        raptor-config-multilib.patch
+Patch1:        raptor-1.4.18-CVE-2012-0037.patch
 URL:           http://librdf.org/raptor/
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libxml2-devel libxslt-devel curl-devel
@@ -30,6 +31,7 @@ RDF/XML or N-Triples.
 %prep
 %setup -q
 %patch0 -p1 -b .multilib
+%patch1 -p1 -b .CVE-2012-0037
 
 # hack to nuke rpaths
 %if "%{_libdir}" != "/usr/lib"
@@ -75,6 +77,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/raptor-config
 
 %changelog
+* Wed Feb 22 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.18-5.1
+- Fixed XML entity expansion that could lead to information disclosure (CVE-2012-0037)
+  Resolves: rhbz#804496
+
 * Thu Oct 29 2009 Orcan Ogetbil <oget[DOT]fedora[AT]gmail[DOT]com> - 1.4.18-5
 - Fix multilib conflict (RHBZ#477342)
 
